@@ -1,4 +1,4 @@
-# Automated SOC Incident Response Pipeline with Wazuh, TheHive & Shuffle
+# SOC-Alert-Triage-and-IR-Automation-Lab
 
 ## Architecture Overview
 
