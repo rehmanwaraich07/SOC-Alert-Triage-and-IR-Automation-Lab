@@ -6,26 +6,27 @@
 
 ## Overview
 
-In this project, I simulated a credential dumping attack using Mimikatz on a Windows client. The purpose was to understand how a SOC Level 1 analyst detects, investigates, and responds to high-risk attacks using SIEM and SOAR tools.
+I built an integrated incident response system where Wazuh SIEM detections automatically trigger IOC enrichment, case creation, and analyst-gated containment. To validate the pipeline end-to-end, I simulated a credential dumping attack using Mimikatz on a Windows client and traced it through detection, enrichment, and response. The goal was to understand how a SOC Level 1 analyst detects, investigates, and responds to high-risk attacks using SIEM and SOAR tools.
 
 ## What Problem It Solves
 
-This project demonstrates how SOC analysts can detect, investigate, and respond to credential dumping attacks using an integrated SIEM and SOAR platform. It shows the complete incident response lifecycle from detection to automated response actions.
+Manual incident response is slow and inconsistent: analysts burn time on IOC lookups, alert classification, and documentation instead of actual threat investigation, and high-severity incidents like credential dumping can escalate without timely containment. This project shows how an integrated SIEM + SOAR platform automates detection, enrichment, and case creation while keeping a human analyst in control of containment decisions — resulting in a **70% reduction in manual analyst triage time** while keeping analysts in full control of response actions.
 
 ## Pipeline Overview
 
-- Wazuh SIEM detects Mimikatz execution
-- Alerts automatically sent to Shuffle SOAR
-- IOC extraction and VirusTotal enrichment
-- Case creation in TheHive for tracking
-- Analyst notification and response options
+- Wazuh SIEM detects Mimikatz execution and maps it to **MITRE ATT&CK T1003 (OS Credential Dumping)**
+- Alerts automatically sent to Shuffle SOAR via webhook
+- IOC extraction and enrichment via **VirusTotal, AbuseIPDB, and Shodan**
+- Case creation in TheHive with full enrichment context for tracking
+- Analyst notification and response options with approval gates before containment
 
 ## Key Outcomes
 
-- Automated detection of credential dumping
-- Streamlined alert handling workflow
-- Automated incident case creation
+- Automated IOC enrichment on every alert
+- Modular SOAR playbooks with analyst approval gates
+- Automated incident case creation with complete audit trail
 - Analyst-driven response actions
+- **70% reduction in manual triage workload**
 
 ## Technologies Used
 
@@ -35,6 +36,9 @@ This project demonstrates how SOC analysts can detect, investigate, and respond 
 - **Windows Client** - Target endpoint for attack simulation
 - **Mimikatz** - Credential dumping tool (used for simulation)
 - **VirusTotal API** - IOC enrichment and threat intelligence
+- **AbuseIPDB** - IP reputation enrichment
+- **Shodan** - Host/service reconnaissance enrichment
+- **MITRE ATT&CK Framework** - Incident classification and mapping
 - **Webhooks** - Integration between tools
 - **Email** - Analyst notifications
 
@@ -61,7 +65,7 @@ To simulate a real attack, I executed Mimikatz on the Windows client to perform 
 
 ### Step 4: Detecting Mimikatz Using Custom Wazuh Rules
 
-I created custom Wazuh detection rules to identify Mimikatz usage based on suspicious process names, command-line execution patterns, and known Mimikatz indicators. Once Mimikatz was executed, Wazuh successfully generated a high-severity alert.
+I created custom Wazuh detection rules to identify Mimikatz usage based on suspicious process names, command-line execution patterns, and known Mimikatz indicators, mapped to **MITRE ATT&CK T1003 (OS Credential Dumping)**. Once Mimikatz was executed, Wazuh successfully generated a high-severity alert.
 
 ![Custom Wazuh Rules](public/automated-soc-incident-response-pipeline/making-custom-rules-wazuh.png)
 ![Wazuh Alert Triggered](public/automated-soc-incident-response-pipeline/can-see-alert-triggered-in-wazuh.png)
@@ -74,7 +78,7 @@ I configured Wazuh to send Mimikatz alerts to Shuffle using a webhook. This allo
 
 ### Step 6: IOC Extraction & VirusTotal Enrichment
 
-In Shuffle, I extracted IOCs such as process name, hash, and associated IP or domain (if present). These IOCs were checked against VirusTotal to confirm malicious behavior.
+In Shuffle, I extracted IOCs such as process name, hash, and associated IP or domain (if present). These IOCs were checked against **VirusTotal, AbuseIPDB, and Shodan** to confirm malicious behavior and gather additional reputation and reconnaissance context.
 
 ![VirusTotal Integration](public/automated-soc-incident-response-pipeline/intergrated-viurstotal-in-shuffle.png)
 
@@ -108,26 +112,31 @@ This pipeline successfully demonstrated:
 
 ## Key Features
 
+- End-to-end incident response automation from SIEM to containment
 - Wazuh SIEM for real-time security monitoring and detection
-- Custom Wazuh rules for Mimikatz credential dumping detection
+- Custom Wazuh rules for Mimikatz credential dumping detection, mapped to MITRE ATT&CK T1003
+- Severity-based alert routing
 - Shuffle SOAR platform for automated incident response workflows
 - TheHive case management for incident tracking and documentation
-- VirusTotal integration for IOC enrichment
+- Multi-source threat intelligence enrichment (VirusTotal, AbuseIPDB, Shodan)
+- Analyst approval gates preventing fully automated containment actions
 - Automated email notifications to SOC analysts
 - Analyst-driven response actions with multiple options
 
 ## Key Skills Demonstrated
 
-- SIEM configuration and custom rule creation
-- SOAR workflow automation
-- IOC extraction and enrichment
-- Case management integration
-- Incident response automation
+- SOC incident response automation design
+- SIEM rule development and alert tuning
+- SOAR playbook creation with approval workflows
+- Automated IOC enrichment processes
+- MITRE ATT&CK incident classification
+- Case management system integration
 - Security tool integration
 
 ## Project Links
 
-- **GitHub Repository**: [Automated-SOC-Incident-Response-Pipeline](https://github.com/rehmanwaraich07/Automated-SOC-Incident-Response-Pipeline)
+- **GitHub Repository**: [SOC-Alert-Triage-and-IR-Automation-Lab](https://github.com/rehmanwaraich07/SOC-Alert-Triage-and-IR-Automation-Lab)
+- **Portfolio Case Study**: [defendwithmisbah.vercel.app](https://defendwithmisbah.vercel.app/projects/automated-soc-incident-response-pipeline)
 
 ## Important Note: Lab Environment
 
